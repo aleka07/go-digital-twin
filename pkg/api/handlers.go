@@ -36,12 +36,12 @@ func (s *Server) CreateTwin(w http.ResponseWriter, r *http.Request) {
 
 	// Create the digital twin
 	dt := twin.NewDigitalTwin(req.ID, req.Type)
-	
+
 	// Set optional fields
 	if req.Definition != "" {
 		dt.SetDefinition(req.Definition)
 	}
-	
+
 	for k, v := range req.Attributes {
 		dt.SetAttribute(k, v)
 	}
@@ -125,11 +125,11 @@ func (s *Server) UpdateTwin(w http.ResponseWriter, r *http.Request) {
 	if req.Type != "" {
 		dt.Type = req.Type
 	}
-	
+
 	if req.Definition != "" {
 		dt.SetDefinition(req.Definition)
 	}
-	
+
 	if req.Attributes != nil {
 		for k, v := range req.Attributes {
 			dt.SetAttribute(k, v)
@@ -217,7 +217,7 @@ func (s *Server) GetFeature(w http.ResponseWriter, r *http.Request) {
 
 	twinID := chi.URLParam(r, "twinID")
 	featureID := chi.URLParam(r, "featureID")
-	
+
 	if twinID == "" || featureID == "" {
 		respondError(w, http.StatusBadRequest, "Twin ID and Feature ID are required")
 		return
@@ -249,7 +249,7 @@ func (s *Server) UpdateFeature(w http.ResponseWriter, r *http.Request) {
 
 	twinID := chi.URLParam(r, "twinID")
 	featureID := chi.URLParam(r, "featureID")
-	
+
 	if twinID == "" || featureID == "" {
 		respondError(w, http.StatusBadRequest, "Twin ID and Feature ID are required")
 		return
@@ -266,9 +266,9 @@ func (s *Server) UpdateFeature(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var req struct {
-		Properties    map[string]interface{} `json:"properties,omitempty"`
-		DesiredProps  map[string]interface{} `json:"desiredProperties,omitempty"`
-		Definition    []string               `json:"definition,omitempty"`
+		Properties   map[string]interface{} `json:"properties,omitempty"`
+		DesiredProps map[string]interface{} `json:"desiredProperties,omitempty"`
+		Definition   []string               `json:"definition,omitempty"`
 	}
 
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
@@ -278,7 +278,7 @@ func (s *Server) UpdateFeature(w http.ResponseWriter, r *http.Request) {
 
 	// Check if feature exists
 	feature, exists := dt.GetFeature(featureID)
-	
+
 	// If feature doesn't exist, create a new one
 	if !exists {
 		feature = *twin.NewFeatureState()
@@ -290,13 +290,13 @@ func (s *Server) UpdateFeature(w http.ResponseWriter, r *http.Request) {
 			feature.SetProperty(k, v)
 		}
 	}
-	
+
 	if req.DesiredProps != nil {
 		for k, v := range req.DesiredProps {
 			feature.SetDesiredProperty(k, v)
 		}
 	}
-	
+
 	if req.Definition != nil {
 		feature.SetDefinition(req.Definition)
 	}
@@ -322,7 +322,7 @@ func (s *Server) UpdateFeature(w http.ResponseWriter, r *http.Request) {
 
 	// Publish event
 	s.PubSub.Publish("feature.updated", map[string]string{
-		"twinId": twinID,
+		"twinId":    twinID,
 		"featureId": featureID,
 	})
 
@@ -336,7 +336,7 @@ func (s *Server) DeleteFeature(w http.ResponseWriter, r *http.Request) {
 
 	twinID := chi.URLParam(r, "twinID")
 	featureID := chi.URLParam(r, "featureID")
-	
+
 	if twinID == "" || featureID == "" {
 		respondError(w, http.StatusBadRequest, "Twin ID and Feature ID are required")
 		return
@@ -369,7 +369,7 @@ func (s *Server) DeleteFeature(w http.ResponseWriter, r *http.Request) {
 
 	// Publish event
 	s.PubSub.Publish("feature.deleted", map[string]string{
-		"twinId": twinID,
+		"twinId":    twinID,
 		"featureId": featureID,
 	})
 
@@ -385,7 +385,7 @@ func (s *Server) GetProperties(w http.ResponseWriter, r *http.Request) {
 
 	twinID := chi.URLParam(r, "twinID")
 	featureID := chi.URLParam(r, "featureID")
-	
+
 	if twinID == "" || featureID == "" {
 		respondError(w, http.StatusBadRequest, "Twin ID and Feature ID are required")
 		return
@@ -418,7 +418,7 @@ func (s *Server) UpdateProperties(w http.ResponseWriter, r *http.Request) {
 
 	twinID := chi.URLParam(r, "twinID")
 	featureID := chi.URLParam(r, "featureID")
-	
+
 	if twinID == "" || featureID == "" {
 		respondError(w, http.StatusBadRequest, "Twin ID and Feature ID are required")
 		return
@@ -465,7 +465,7 @@ func (s *Server) UpdateProperties(w http.ResponseWriter, r *http.Request) {
 
 	// Publish event
 	s.PubSub.Publish("properties.updated", map[string]string{
-		"twinId": twinID,
+		"twinId":    twinID,
 		"featureId": featureID,
 	})
 
@@ -480,7 +480,7 @@ func (s *Server) GetProperty(w http.ResponseWriter, r *http.Request) {
 	twinID := chi.URLParam(r, "twinID")
 	featureID := chi.URLParam(r, "featureID")
 	propKey := chi.URLParam(r, "propKey")
-	
+
 	if twinID == "" || featureID == "" || propKey == "" {
 		respondError(w, http.StatusBadRequest, "Twin ID, Feature ID, and Property Key are required")
 		return
@@ -519,7 +519,7 @@ func (s *Server) UpdateProperty(w http.ResponseWriter, r *http.Request) {
 	twinID := chi.URLParam(r, "twinID")
 	featureID := chi.URLParam(r, "featureID")
 	propKey := chi.URLParam(r, "propKey")
-	
+
 	if twinID == "" || featureID == "" || propKey == "" {
 		respondError(w, http.StatusBadRequest, "Twin ID, Feature ID, and Property Key are required")
 		return
@@ -564,10 +564,10 @@ func (s *Server) UpdateProperty(w http.ResponseWriter, r *http.Request) {
 
 	// Publish event
 	s.PubSub.Publish("property.updated", map[string]interface{}{
-		"twinId": twinID,
-		"featureId": featureID,
+		"twinId":      twinID,
+		"featureId":   featureID,
 		"propertyKey": propKey,
-		"value": propValue,
+		"value":       propValue,
 	})
 
 	respondJSON(w, http.StatusOK, propValue)
@@ -581,7 +581,7 @@ func (s *Server) DeleteProperty(w http.ResponseWriter, r *http.Request) {
 	twinID := chi.URLParam(r, "twinID")
 	featureID := chi.URLParam(r, "featureID")
 	propKey := chi.URLParam(r, "propKey")
-	
+
 	if twinID == "" || featureID == "" || propKey == "" {
 		respondError(w, http.StatusBadRequest, "Twin ID, Feature ID, and Property Key are required")
 		return
@@ -627,8 +627,8 @@ func (s *Server) DeleteProperty(w http.ResponseWriter, r *http.Request) {
 
 	// Publish event
 	s.PubSub.Publish("property.deleted", map[string]string{
-		"twinId": twinID,
-		"featureId": featureID,
+		"twinId":      twinID,
+		"featureId":   featureID,
 		"propertyKey": propKey,
 	})
 
