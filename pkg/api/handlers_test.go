@@ -36,7 +36,7 @@ func TestCreateTwin(t *testing.T) {
 	jsonData, _ := json.Marshal(twinData)
 	req := httptest.NewRequest("POST", "/twins", bytes.NewBuffer(jsonData))
 	req.Header.Set("Content-Type", "application/json")
-	
+
 	w := httptest.NewRecorder()
 	server.CreateTwin(w, req)
 
@@ -71,7 +71,7 @@ func TestCreateTwin(t *testing.T) {
 	jsonData, _ = json.Marshal(invalidTwin)
 	req = httptest.NewRequest("POST", "/twins", bytes.NewBuffer(jsonData))
 	req.Header.Set("Content-Type", "application/json")
-	
+
 	w = httptest.NewRecorder()
 	server.CreateTwin(w, req)
 
@@ -95,10 +95,10 @@ func TestGetTwin(t *testing.T) {
 	// Test getting the twin
 	req := httptest.NewRequest("GET", "/twins/test-twin-2", nil)
 	req.Header.Set("Content-Type", "application/json")
-	
+
 	// Set URL parameter
 	req = req.WithContext(setURLParam(req.Context(), "twinID", "test-twin-2"))
-	
+
 	w := httptest.NewRecorder()
 	server.GetTwin(w, req)
 
@@ -122,7 +122,7 @@ func TestGetTwin(t *testing.T) {
 	// Test getting a non-existent twin
 	req = httptest.NewRequest("GET", "/twins/non-existent", nil)
 	req = req.WithContext(setURLParam(req.Context(), "twinID", "non-existent"))
-	
+
 	w = httptest.NewRecorder()
 	server.GetTwin(w, req)
 
@@ -155,10 +155,10 @@ func TestUpdateTwin(t *testing.T) {
 	jsonData, _ := json.Marshal(updateData)
 	req := httptest.NewRequest("PUT", "/twins/test-twin-3", bytes.NewBuffer(jsonData))
 	req.Header.Set("Content-Type", "application/json")
-	
+
 	// Set URL parameter
 	req = req.WithContext(setURLParam(req.Context(), "twinID", "test-twin-3"))
-	
+
 	w := httptest.NewRecorder()
 	server.UpdateTwin(w, req)
 
@@ -172,15 +172,15 @@ func TestUpdateTwin(t *testing.T) {
 
 	// Verify twin was updated
 	updatedTwin, _ := server.Registry.Get("test-twin-3")
-	
+
 	if updatedTwin.Type != "advanced-sensor" {
 		t.Errorf("Expected twin type advanced-sensor, got %s", updatedTwin.Type)
 	}
-	
+
 	if val, exists := updatedTwin.GetAttribute("location"); !exists || val != "master-bedroom" {
 		t.Errorf("Expected location attribute to be master-bedroom, got %v", val)
 	}
-	
+
 	if val, exists := updatedTwin.GetAttribute("status"); !exists || val != "active" {
 		t.Errorf("Expected status attribute to be active, got %v", val)
 	}
@@ -195,10 +195,10 @@ func TestDeleteTwin(t *testing.T) {
 
 	// Delete the twin
 	req := httptest.NewRequest("DELETE", "/twins/test-twin-4", nil)
-	
+
 	// Set URL parameter
 	req = req.WithContext(setURLParam(req.Context(), "twinID", "test-twin-4"))
-	
+
 	w := httptest.NewRecorder()
 	server.DeleteTwin(w, req)
 
@@ -222,18 +222,18 @@ func TestFeatureManagement(t *testing.T) {
 
 	// Create a test twin with features
 	dt := twin.NewDigitalTwin("test-twin-5", "device")
-	
+
 	tempFeature := twin.NewFeatureState()
 	tempFeature.SetProperty("value", 22.5)
 	tempFeature.SetProperty("unit", "celsius")
-	
+
 	dt.AddFeature("temperature", *tempFeature)
 	server.Registry.Create(dt)
 
 	// Test getting features
 	req := httptest.NewRequest("GET", "/twins/test-twin-5/features", nil)
 	req = req.WithContext(setURLParam(req.Context(), "twinID", "test-twin-5"))
-	
+
 	w := httptest.NewRecorder()
 	server.GetFeatures(w, req)
 
@@ -249,7 +249,7 @@ func TestFeatureManagement(t *testing.T) {
 	req = httptest.NewRequest("GET", "/twins/test-twin-5/features/temperature", nil)
 	req = req.WithContext(setURLParam(req.Context(), "twinID", "test-twin-5"))
 	req = req.WithContext(setURLParam(req.Context(), "featureID", "temperature"))
-	
+
 	w = httptest.NewRecorder()
 	server.GetFeature(w, req)
 
@@ -278,7 +278,7 @@ func TestFeatureManagement(t *testing.T) {
 	// Test updating a feature
 	updateData := map[string]interface{}{
 		"properties": map[string]interface{}{
-			"value": 23.0,
+			"value":  23.0,
 			"status": "normal",
 		},
 	}
@@ -288,7 +288,7 @@ func TestFeatureManagement(t *testing.T) {
 	req.Header.Set("Content-Type", "application/json")
 	req = req.WithContext(setURLParam(req.Context(), "twinID", "test-twin-5"))
 	req = req.WithContext(setURLParam(req.Context(), "featureID", "temperature"))
-	
+
 	w = httptest.NewRecorder()
 	server.UpdateFeature(w, req)
 
@@ -303,11 +303,11 @@ func TestFeatureManagement(t *testing.T) {
 	// Verify feature was updated
 	updatedTwin, _ := server.Registry.Get("test-twin-5")
 	updatedFeature, _ := updatedTwin.GetFeature("temperature")
-	
+
 	if val, exists := updatedFeature.GetProperty("value"); !exists || val != 23.0 {
 		t.Errorf("Expected value property to be 23.0, got %v", val)
 	}
-	
+
 	if val, exists := updatedFeature.GetProperty("status"); !exists || val != "normal" {
 		t.Errorf("Expected status property to be normal, got %v", val)
 	}
@@ -318,12 +318,12 @@ func TestPropertyManagement(t *testing.T) {
 
 	// Create a test twin with features and properties
 	dt := twin.NewDigitalTwin("test-twin-6", "device")
-	
+
 	lightFeature := twin.NewFeatureState()
 	lightFeature.SetProperty("state", "on")
 	lightFeature.SetProperty("brightness", 80)
 	lightFeature.SetProperty("color", "white")
-	
+
 	dt.AddFeature("light", *lightFeature)
 	server.Registry.Create(dt)
 
@@ -331,7 +331,7 @@ func TestPropertyManagement(t *testing.T) {
 	req := httptest.NewRequest("GET", "/twins/test-twin-6/features/light/properties", nil)
 	req = req.WithContext(setURLParam(req.Context(), "twinID", "test-twin-6"))
 	req = req.WithContext(setURLParam(req.Context(), "featureID", "light"))
-	
+
 	w := httptest.NewRecorder()
 	server.GetProperties(w, req)
 
@@ -348,7 +348,7 @@ func TestPropertyManagement(t *testing.T) {
 	req = req.WithContext(setURLParam(req.Context(), "twinID", "test-twin-6"))
 	req = req.WithContext(setURLParam(req.Context(), "featureID", "light"))
 	req = req.WithContext(setURLParam(req.Context(), "propKey", "brightness"))
-	
+
 	w = httptest.NewRecorder()
 	server.GetProperty(w, req)
 
@@ -376,7 +376,7 @@ func TestPropertyManagement(t *testing.T) {
 	req = req.WithContext(setURLParam(req.Context(), "twinID", "test-twin-6"))
 	req = req.WithContext(setURLParam(req.Context(), "featureID", "light"))
 	req = req.WithContext(setURLParam(req.Context(), "propKey", "brightness"))
-	
+
 	w = httptest.NewRecorder()
 	server.UpdateProperty(w, req)
 
@@ -391,7 +391,7 @@ func TestPropertyManagement(t *testing.T) {
 	// Verify property was updated
 	updatedTwin, _ := server.Registry.Get("test-twin-6")
 	updatedFeature, _ := updatedTwin.GetFeature("light")
-	
+
 	if val, exists := updatedFeature.GetProperty("brightness"); !exists || val != 90.0 {
 		t.Errorf("Expected brightness property to be 90, got %v", val)
 	}
@@ -401,7 +401,7 @@ func TestPropertyManagement(t *testing.T) {
 	req = req.WithContext(setURLParam(req.Context(), "twinID", "test-twin-6"))
 	req = req.WithContext(setURLParam(req.Context(), "featureID", "light"))
 	req = req.WithContext(setURLParam(req.Context(), "propKey", "color"))
-	
+
 	w = httptest.NewRecorder()
 	server.DeleteProperty(w, req)
 
@@ -416,7 +416,7 @@ func TestPropertyManagement(t *testing.T) {
 	// Verify property was deleted
 	updatedTwin, _ = server.Registry.Get("test-twin-6")
 	updatedFeature, _ = updatedTwin.GetFeature("light")
-	
+
 	if _, exists := updatedFeature.GetProperty("color"); exists {
 		t.Error("Expected color property to be deleted")
 	}

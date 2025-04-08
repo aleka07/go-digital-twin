@@ -8,10 +8,10 @@ import (
 
 // Common errors
 var (
-	ErrFeatureNotFound    = errors.New("feature not found")
+	ErrFeatureNotFound      = errors.New("feature not found")
 	ErrFeatureAlreadyExists = errors.New("feature already exists")
-	ErrPropertyNotFound   = errors.New("property not found")
-	ErrInvalidValue       = errors.New("invalid value")
+	ErrPropertyNotFound     = errors.New("property not found")
+	ErrInvalidValue         = errors.New("invalid value")
 )
 
 // DigitalTwin represents a digital representation of a physical entity
@@ -43,7 +43,7 @@ func NewDigitalTwin(id, twinType string) *DigitalTwin {
 func (dt *DigitalTwin) SetDefinition(definition string) {
 	dt.mutex.Lock()
 	defer dt.mutex.Unlock()
-	
+
 	dt.Definition = definition
 	dt.ModifiedAt = time.Now()
 }
@@ -52,7 +52,7 @@ func (dt *DigitalTwin) SetDefinition(definition string) {
 func (dt *DigitalTwin) GetDefinition() string {
 	dt.mutex.RLock()
 	defer dt.mutex.RUnlock()
-	
+
 	return dt.Definition
 }
 
@@ -60,7 +60,7 @@ func (dt *DigitalTwin) GetDefinition() string {
 func (dt *DigitalTwin) GetAttribute(key string) (interface{}, bool) {
 	dt.mutex.RLock()
 	defer dt.mutex.RUnlock()
-	
+
 	val, exists := dt.Attributes[key]
 	return val, exists
 }
@@ -69,7 +69,7 @@ func (dt *DigitalTwin) GetAttribute(key string) (interface{}, bool) {
 func (dt *DigitalTwin) SetAttribute(key string, value interface{}) {
 	dt.mutex.Lock()
 	defer dt.mutex.Unlock()
-	
+
 	dt.Attributes[key] = value
 	dt.ModifiedAt = time.Now()
 }
@@ -78,7 +78,7 @@ func (dt *DigitalTwin) SetAttribute(key string, value interface{}) {
 func (dt *DigitalTwin) RemoveAttribute(key string) {
 	dt.mutex.Lock()
 	defer dt.mutex.Unlock()
-	
+
 	delete(dt.Attributes, key)
 	dt.ModifiedAt = time.Now()
 }
@@ -87,7 +87,7 @@ func (dt *DigitalTwin) RemoveAttribute(key string) {
 func (dt *DigitalTwin) GetAllAttributes() map[string]interface{} {
 	dt.mutex.RLock()
 	defer dt.mutex.RUnlock()
-	
+
 	attributes := make(map[string]interface{}, len(dt.Attributes))
 	for k, v := range dt.Attributes {
 		attributes[k] = v
@@ -99,7 +99,7 @@ func (dt *DigitalTwin) GetAllAttributes() map[string]interface{} {
 func (dt *DigitalTwin) GetFeature(id string) (FeatureState, bool) {
 	dt.mutex.RLock()
 	defer dt.mutex.RUnlock()
-	
+
 	feature, exists := dt.Features[id]
 	return feature, exists
 }
@@ -108,11 +108,11 @@ func (dt *DigitalTwin) GetFeature(id string) (FeatureState, bool) {
 func (dt *DigitalTwin) AddFeature(id string, feature FeatureState) error {
 	dt.mutex.Lock()
 	defer dt.mutex.Unlock()
-	
+
 	if _, exists := dt.Features[id]; exists {
 		return ErrFeatureAlreadyExists
 	}
-	
+
 	dt.Features[id] = feature
 	dt.ModifiedAt = time.Now()
 	return nil
@@ -122,11 +122,11 @@ func (dt *DigitalTwin) AddFeature(id string, feature FeatureState) error {
 func (dt *DigitalTwin) UpdateFeature(id string, feature FeatureState) error {
 	dt.mutex.Lock()
 	defer dt.mutex.Unlock()
-	
+
 	if _, exists := dt.Features[id]; !exists {
 		return ErrFeatureNotFound
 	}
-	
+
 	dt.Features[id] = feature
 	dt.ModifiedAt = time.Now()
 	return nil
@@ -136,11 +136,11 @@ func (dt *DigitalTwin) UpdateFeature(id string, feature FeatureState) error {
 func (dt *DigitalTwin) RemoveFeature(id string) error {
 	dt.mutex.Lock()
 	defer dt.mutex.Unlock()
-	
+
 	if _, exists := dt.Features[id]; !exists {
 		return ErrFeatureNotFound
 	}
-	
+
 	delete(dt.Features, id)
 	dt.ModifiedAt = time.Now()
 	return nil
@@ -150,7 +150,7 @@ func (dt *DigitalTwin) RemoveFeature(id string) error {
 func (dt *DigitalTwin) GetAllFeatures() map[string]FeatureState {
 	dt.mutex.RLock()
 	defer dt.mutex.RUnlock()
-	
+
 	features := make(map[string]FeatureState, len(dt.Features))
 	for k, v := range dt.Features {
 		features[k] = v

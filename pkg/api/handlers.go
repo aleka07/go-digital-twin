@@ -239,7 +239,7 @@ func (s *Server) GetFeature(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	respondJSON(w, http.StatusOK, feature)
+	respondJSON(w, http.StatusOK, &feature)
 }
 
 // UpdateFeature handles PUT /twins/{twinID}/features/{featureID}
