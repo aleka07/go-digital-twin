@@ -4,8 +4,9 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/aleka07/go-digital-twin/pkg/registry"
+	"github.com/aleka07/go-digital-twin/pkg/twin"
 	"github.com/go-chi/chi/v5"
-	"github.com/yourusername/go-digital-twin/pkg/twin"
 )
 
 // Twin management handlers

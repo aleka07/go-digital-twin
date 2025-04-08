@@ -2,14 +2,15 @@ package api
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
-	"github.com/yourusername/go-digital-twin/pkg/messaging_sim"
-	"github.com/yourusername/go-digital-twin/pkg/registry"
-	"github.com/yourusername/go-digital-twin/pkg/twin"
+	"github.com/aleka07/go-digital-twin/pkg/messaging_sim"
+	"github.com/aleka07/go-digital-twin/pkg/registry"
+	"github.com/aleka07/go-digital-twin/pkg/twin"
 )
 
 func setupTestServer() *Server {

@@ -3,15 +3,14 @@ package api
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"sync"
 	"time"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
-	"github.com/yourusername/go-digital-twin/pkg/messaging_sim"
-	"github.com/yourusername/go-digital-twin/pkg/registry"
+	"github.com/aleka07/go-digital-twin/pkg/messaging_sim"
+	"github.com/aleka07/go-digital-twin/pkg/registry"
 )
 
 // Server represents the HTTP API server

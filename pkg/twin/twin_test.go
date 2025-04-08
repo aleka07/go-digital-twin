@@ -1,8 +1,8 @@
 package twin
 
 import (
+	"fmt"
 	"testing"
-	"time"
 )
 
 func TestNewDigitalTwin(t *testing.T) {

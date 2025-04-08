@@ -1,9 +1,10 @@
 package registry
 
 import (
+	"fmt"
 	"testing"
 
-	"github.com/yourusername/go-digital-twin/pkg/twin"
+	"github.com/aleka07/go-digital-twin/pkg/twin"
 )
 
 func TestRegistryCreation(t *testing.T) {

@@ -11,9 +11,9 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/yourusername/go-digital-twin/pkg/api"
-	"github.com/yourusername/go-digital-twin/pkg/messaging_sim"
-	"github.com/yourusername/go-digital-twin/pkg/registry"
+	"github.com/aleka07/go-digital-twin/pkg/api"
+	"github.com/aleka07/go-digital-twin/pkg/messaging_sim"
+	"github.com/aleka07/go-digital-twin/pkg/registry"
 )
 
 func main() {
